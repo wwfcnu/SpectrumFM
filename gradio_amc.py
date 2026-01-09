@@ -121,16 +121,6 @@ def predict_signal_type(file_path):
         # 转置数据 (batch_size, seq_len, input_dim) -> (batch_size, input_dim, seq_len)
         processed_samples = np.transpose(processed_samples, (0, 2, 1))
         
-        # 如果序列长度小于1024，进行填充
-        if processed_samples.shape[2] < 1024:
-            # 使用零填充到1024长度
-            padding_needed = 1024 - processed_samples.shape[2]
-            padding = np.zeros((processed_samples.shape[0], processed_samples.shape[1], padding_needed))
-            processed_samples = np.concatenate([processed_samples, padding], axis=2)
-        elif processed_samples.shape[2] > 1024:
-            # 如果超过1024，截取前1024个
-            processed_samples = processed_samples[:, :, :1024]
-        
         # 应用AP转换
         processed_samples = iq2ap(processed_samples)
         
