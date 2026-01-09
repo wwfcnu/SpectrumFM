@@ -35,16 +35,6 @@ def process_signal_data(df):
         # 组合成IQ数据 (seq_len, 2)
         iq_data = np.column_stack([i_values, q_values])
         
-        # 如果序列长度小于1024，进行填充
-        if len(iq_data) < 1024:
-            # 使用零填充到1024长度
-            padding_needed = 1024 - len(iq_data)
-            padding = np.zeros((padding_needed, 2))
-            iq_data = np.vstack([iq_data, padding])
-        elif len(iq_data) > 1024:
-            # 如果超过1024，截取前1024个
-            iq_data = iq_data[:1024, :]
-        
         processed_samples.append(iq_data)
         sample_ids.append(sample_id)
     

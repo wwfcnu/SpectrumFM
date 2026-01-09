@@ -91,16 +91,6 @@ def process_signal_data(df):
         # 组合成IQ数据 (seq_len, 2)
         iq_data = np.column_stack([i_values, q_values])
         
-        # 如果序列长度小于1024，进行填充
-        if len(iq_data) < 1024:
-            # 使用零填充到1024长度
-            padding_needed = 1024 - len(iq_data)
-            padding = np.zeros((padding_needed, 2))
-            iq_data = np.vstack([iq_data, padding])
-        elif len(iq_data) > 1024:
-            # 如果超过1024，截取前1024个
-            iq_data = iq_data[:1024, :]
-        
         processed_samples.append(iq_data)
         sample_ids.append(sample_id)
     
@@ -130,6 +120,16 @@ def predict_signal_type(file_path):
         # 数据预处理
         # 转置数据 (batch_size, seq_len, input_dim) -> (batch_size, input_dim, seq_len)
         processed_samples = np.transpose(processed_samples, (0, 2, 1))
+        
+        # 如果序列长度小于1024，进行填充
+        if processed_samples.shape[2] < 1024:
+            # 使用零填充到1024长度
+            padding_needed = 1024 - processed_samples.shape[2]
+            padding = np.zeros((processed_samples.shape[0], processed_samples.shape[1], padding_needed))
+            processed_samples = np.concatenate([processed_samples, padding], axis=2)
+        elif processed_samples.shape[2] > 1024:
+            # 如果超过1024，截取前1024个
+            processed_samples = processed_samples[:, :, :1024]
         
         # 应用AP转换
         processed_samples = iq2ap(processed_samples)
