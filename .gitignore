@@ -1,39 +1,34 @@
-```gitignore
-# Python
-__pycache__/
+```
+# Compiled Python files
 *.pyc
-*.pyo
-*.pyd
+__pycache__/
 
-# Logs and temp files
+# Data files (if they are large/generated)
+*.pkl
+*.parquet
+
+# Logs
 *.log
-*.tmp
 
-# Environment
+# Environment files
 .env
 .env.local
 *.env.*
 
-# Editors
+# Editor/IDE files
 .vscode/
 .idea/
+*.swp
+*.swo
+*.tmp
 
-# Dependencies
+# Dependencies (if any are detected later)
 .venv/
 venv/
 node_modules/
 
-# Build artifacts
+# Build artifacts (if any are detected later)
 dist/
 build/
 target/
-
-# Coverage
-.coverage
-coverage/
-htmlcov/
-
-# Cache
-.mypy_cache/
-.pytest_cache/
 ```
