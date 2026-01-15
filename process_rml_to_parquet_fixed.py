@@ -10,64 +10,12 @@ import pandas as pd
 from sklearn.model_selection import train_test_split
 
 
-def iq2ap(IQ_data):
-    """
-    Convert IQ 2 AP and conduct log scaling
-    """
-    # 提取I和Q分量
-    I = IQ_data[:, :, 0]
-    Q = IQ_data[:, :, 1]
-    
-    # 计算幅度
-    amplitude = np.sqrt(I**2 + Q**2)
-    amplitude = np.log(amplitude)
-    
-    # 计算相位
-    phase = np.arctan2(Q, I)
-    
-    # 将幅度和相位组合成一个新的三维数组
-    AP_data = np.stack((amplitude, phase), axis=-1)
-    
-    return AP_data
 
 
-def min_max_normalize(data, min_value=None, max_value=None):
-    min_val = np.min(data) if min_value is None else min_value
-    max_val = np.max(data) if max_value is None else max_value
-    return (data - min_val) / (max_val - min_val)
 
 
-def normalize(sample):
-    normalized_sample = np.zeros_like(sample)
-    # max_a = -10000
-    # max_p = -10000
-    # min_a = 10000
-    # min_p = 10000
-    for i in range(sample.shape[0]):
-        # 提取 I 和 Q
-        I = sample[i, :, 0]
-        Q = sample[i, :, 1]
-        
-        # 归一化 I 和 Q
-        normalized_I = min_max_normalize(I)
-        normalized_Q = min_max_normalize(Q)
-        # normalized_I = min_max_normalize(I)
-        # normalized_Q = min_max_normalize(Q)
-        # 将归一化后的 I 和 Q 放回原位置
-        normalized_sample[i, :, 0] = normalized_I
-        normalized_sample[i, :, 1] = normalized_Q
-    #     if np.max(Q) > max_p:
-    #     #         max_p = np.max(Q)
-    #     #     if np.min(Q) < min_p:
-    #     #         min_p = np.min(Q)
-    #
-    # # # 更新最大和最小幅度
-    #     #     if np.max(I) > max_a:
-    #     #         max_a = np.max(I)
-    #     #     if np.min(I) < min_a:
-    #     #         min_a = np.min(I)
-    #     # print('max_p:', max_p, 'min_p:', min_p, 'max_a:', max_a, 'min_a:', min_a)
-    return normalized_sample
+
+
 
 
 def process_data():
@@ -115,16 +63,14 @@ def process_data():
     train_dict["value"] = np.concatenate(train_dict["value"], axis=0)
     train_dict["value"] = np.transpose(train_dict["value"], (0, 2, 1))
 
-    # Apply iq2ap transformation
-    train_dict["value"] = iq2ap(train_dict["value"])
-    # Apply normalization
-    train_dict["value"] = normalize(train_dict["value"])
+    # Keep original IQ data without any transformations
+    # No processing applied to raw IQ data
 
     train_dict["label"] = np.concatenate(train_dict["label"], axis=0)
     test_dict["value"] = np.concatenate(test_dict["value"], axis=0)
     test_dict["value"] = np.transpose(test_dict["value"], (0, 2, 1))
-    test_dict["value"] = iq2ap(test_dict["value"])
-    test_dict["value"] = normalize(test_dict["value"])
+    # Keep original IQ data without any transformations
+    # No processing applied to raw IQ data
     
     test_dict["label"] = np.concatenate(test_dict["label"], axis=0)
     test_dict["snr"] = np.concatenate(test_dict["snr"], axis=0)
